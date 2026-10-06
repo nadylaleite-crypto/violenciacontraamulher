@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Violeta – Aprender, Proteger, Acolher</title>
+<style>
+:root{--bg:#faf6ff;--card:#fff;--tx:#2a1740;--mut:#6d5a85;--pri:#7c3aed;--pri2:#a78bfa;--ok:#16a34a;--bad:#dc2626;--line:#e6dcf5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150b24;--card:#221236;--tx:#f3eafc;--mut:#b8a6d1;--line:#3a2456}}
+:root[data-theme="dark"]{--bg:#150b24;--card:#221236;--tx:#f3eafc;--mut:#b8a6d1;--line:#3a2456}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;justify-content:center}
+#app{width:100%;max-width:480px;min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;gap:10px}
+h1{font-size:20px;margin:0;color:var(--pri)}
+.exit{background:#334155;color:#fff;border:0;border-radius:20px;padding:8px 12px;font-size:12px;font-weight:600}
+main{flex:1;padding:0 16px 90px;overflow-x:hidden}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.xp{height:10px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:8px}
+.xp i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width .4s}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mut{color:var(--mut);font-size:13px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:600;width:100%}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--line);border-radius:12px;padding:12px;margin-top:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}
+.opt.bad{border-color:var(--bad);background:rgba(220,38,38,.12)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;background:none;border:0;padding:10px 4px;color:var(--mut);font-size:11px}
+nav button span{display:block;font-size:20px}
+nav button.on{color:var(--pri);font-weight:700}
+.mis{display:flex;gap:12px;align-items:center}
+.chk{width:28px;height:28px;border-radius:50%;border:2px solid var(--pri2);background:none;color:#fff;flex:none}
+.chk.d{background:var(--ok);border-color:var(--ok)}
+.badge{text-align:center;padding:12px 4px;border-radius:14px;border:1px solid var(--line);background:var(--card)}
+.badge.lock{opacity:.35;filter:grayscale(1)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sos{display:block;text-decoration:none;color:#fff;background:var(--pri);border-radius:14px;padding:14px;margin-bottom:10px;font-weight:600}
+.sos small{display:block;font-weight:400;opacity:.9}
+.fake{padding:24px}
+</style>
+</head>
+<body>
+<div id="app">
+<header><h1>💜 Violeta</h1><button class="exit" onclick="quick()">Sair rápido</button></header>
+<main id="m"></main>
+<nav id="nav"></nav>
+</div>
+<script>
+const Q=[
+{q:"Humilhar, controlar com ciúmes e isolar a mulher de amigos e familiares é qual tipo de violência?",o:["Psicológica","Apenas 'briga de casal'","Patrimonial"],a:0,e:"É violência psicológica, prevista na Lei Maria da Penha. Não deixa marcas visíveis, mas causa danos profundos."},
+{q:"Reter o cartão, esconder documentos ou destruir objetos dela é violência:",o:["Física","Patrimonial","Moral"],a:1,e:"Violência patrimonial inclui reter, subtrair ou destruir bens, documentos e instrumentos de trabalho."},
+{q:"Espalhar mentiras ou xingar uma mulher publicamente, inclusive na internet, é violência:",o:["Moral","Sexual","Não é crime"],a:0,e:"Calúnia, difamação e injúria configuram violência moral, inclusive no ambiente digital."},
+{q:"Forçar relação sexual dentro do casamento é:",o:["Direito do parceiro","Violência sexual","Problema privado"],a:1,e:"Qualquer relação sem consentimento é violência sexual, mesmo entre pessoas casadas."},
+{q:"Uma amiga conta que sofre agressões. A melhor atitude inicial é:",o:["Dizer que ela deve terminar já","Escutar sem julgar e apresentar canais de ajuda","Ignorar para não se meter"],a:1,e:"Acolher sem julgamento e informar sobre o Ligue 180 e a rede de proteção respeita o tempo e a segurança dela."},
+{q:"Qual número atende denúncias e orienta sobre violência contra a mulher, de forma gratuita, 24h?",o:["Ligue 180","Ligue 100 apenas","Ligue 155"],a:0,e:"A Central de Atendimento à Mulher (Ligue 180) funciona 24 horas, todos os dias. Em risco imediato, ligue 190."},
+{q:"A Lei Maria da Penha protege mulheres apenas quando há agressão física?",o:["Sim","Não, também cobre violência psicológica, moral, sexual e patrimonial","Só se houver testemunhas"],a:1,e:"A lei reconhece cinco formas de violência doméstica e familiar: física, psicológica, sexual, patrimonial e moral."},
+{q:"Sinal de alerta em um relacionamento:",o:["Respeitar os amigos dela","Vigiar celular e decidir com quem ela pode falar","Conversar sobre divergências"],a:1,e:"Controle e vigilância são sinais de abuso e costumam anteceder a escalada da violência."}
+];
+const M=[
+{id:"m1",t:"Salve o Ligue 180 nos contatos",x:20},
+{id:"m2",t:"Converse com alguém sobre respeito nas relações",x:30},
+{id:"m3",t:"Compartilhe um material informativo",x:25},
+{id:"m4",t:"Aprenda os 5 tipos de violência (Lei Maria da Penha)",x:30},
+{id:"m5",t:"Questione uma 'piada' machista que ouvir",x:35}
+];
+const B=[
+{id:"b1",i:"🌱",n:"Primeiro passo",c:s=>s.xp>=10},
+{id:"b2",i:"📚",n:"Estudiosa",c:s=>s.done>=1},
+{id:"b3",i:"🎯",n:"Nota máxima",c:s=>s.perfect},
+{id:"b4",i:"🤝",n:"Aliada",c:s=>s.mis.length>=3},
+{id:"b5",i:"🦋",n:"Nível 3",c:s=>lvl(s.xp)>=3},
+{id:"b6",i:"👑",n:"Guardiã",c:s=>s.mis.length>=5}
+];
+let S={xp:0,mis:[],done:0,perfect:false},tab="learn",qi=0,sc=0,ans=null,playing=false;
+try{const r=localStorage.getItem("violeta");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem("violeta",JSON.stringify(S))}catch(e){}};
+const lvl=x=>Math.floor(x/100)+1;
+const $=s=>document.querySelector(s);
+function head(){const l=lvl(S.xp),p=S.xp%100;return `<div class="card"><div class="row"><b>Nível ${l}</b><span class="mut">${S.xp} XP</span></div><div class="xp"><i style="width:${p}%"></i></div></div>`}
+function nav(){const t=[["learn","📖","Aprender"],["mis","✅","Missões"],["bad","🏅","Conquistas"],["help","☎️","Ajuda"]];
+$("#nav").innerHTML=t.map(([k,i,n])=>`<button class="${tab===k?"on":""}" onclick="go('${k}')"><span>${i}</span>${n}</button>`).join("")}
+function go(t){tab=t;playing=false;render()}
+function render(){nav();let h=head();
+if(tab==="learn")h+=playing?quiz():`<div class="card"><h3 style="margin-top:0">Quiz: Reconheça os sinais</h3><p class="mut">${Q.length} perguntas sobre tipos de violência, Lei Maria da Penha e como ajudar. Cada acerto vale 10 XP.</p><button class="btn" onclick="start()">Começar</button></div>`;
+if(tab==="mis")h+=`<p class="mut">Pequenas ações que fazem diferença na vida real.</p>`+M.map(m=>{const d=S.mis.includes(m.id);return `<div class="card mis"><button class="chk ${d?"d":""}" onclick="tog('${m.id}')">${d?"✓":""}</button><div style="flex:1">${m.t}<div class="mut">+${m.x} XP</div></div></div>`}).join("");
+if(tab==="bad")h+=`<div class="grid">${B.map(b=>`<div class="badge ${b.c(S)?"":"lock"}"><div style="font-size:30px">${b.i}</div><div class="mut">${b.n}</div></div>`).join("")}</div>`;
+if(tab==="help")h+=`<a class="sos" href="tel:180">Ligue 180<small>Central de Atendimento à Mulher · 24h · gratuito</small></a><a class="sos" style="background:#dc2626" href="tel:190">Ligue 190<small>Polícia Militar · risco imediato</small></a><a class="sos" style="background:#0f766e" href="tel:192">Ligue 192<small>SAMU · emergência médica</small></a><div class="card"><b>Se você está em risco</b><p class="mut">Procure a Delegacia da Mulher (DEAM) ou o Centro de Referência de Atendimento à Mulher da sua cidade. Você pode pedir medidas protetivas de urgência. Apague o histórico deste app se o agressor tiver acesso ao seu celular.</p></div>`;
+$("#m").innerHTML=h}
+function start(){qi=0;sc=0;ans=null;playing=true;render()}
+function quiz(){if(qi>=Q.length){const p=sc===Q.length;return `<div class="card" style="text-align:center"><div style="font-size:44px">${p?"🎉":"💜"}</div><h3>${sc} de ${Q.length} acertos</h3><p class="mut">${p?"Perfeito! Você está preparada para reconhecer e apoiar.":"Revise as explicações e tente de novo."}</p><button class="btn" onclick="start()">Jogar novamente</button></div>`}
+const q=Q[qi];return `<div class="card"><div class="mut">Pergunta ${qi+1}/${Q.length}</div><h3>${q.q}</h3>${q.o.map((o,i)=>`<button class="opt ${ans===null?"":i===q.a?"ok":i===ans?"bad":""}" ${ans!==null?"disabled":""} onclick="pick(${i})">${o}</button>`).join("")}${ans!==null?`<p class="mut">${q.e}</p><button class="btn" onclick="next()">${qi+1<Q.length?"Próxima":"Ver resultado"}</button>`:""}</div>`}
+function pick(i){ans=i;if(i===Q[qi].a){sc++;S.xp+=10;save()}render()}
+function next(){qi++;ans=null;if(qi>=Q.length){S.done++;if(sc===Q.length)S.perfect=true;save()}render()}
+function tog(id){const m=M.find(x=>x.id===id),i=S.mis.indexOf(id);if(i<0){S.mis.push(id);S.xp+=m.x}else{S.mis.splice(i,1);S.xp=Math.max(0,S.xp-m.x)}save();render()}
+function quick(){document.body.innerHTML='<div class="fake"><h2>Previsão do tempo</h2><p>Hoje: 29°C, parcialmente nublado.</p><p>Amanhã: 31°C, sol.</p><small>Recarregue a página para voltar.</small></div>'}
+render();
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){})}
+</script>
+</body>
+</html>
